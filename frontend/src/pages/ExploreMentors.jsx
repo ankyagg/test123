@@ -1,9 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-import { ChevronLeft, Star, GraduationCap, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import {
+  ChevronLeft,
+  Star,
+  GraduationCap,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  LayoutDashboard,
+  Users,
+  Search,
+  Bell,
+  MessageSquare,
+  Calendar as CalendarMenu
+} from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function ExploreMentors() {
+  const { user, tloading } = useAuth();
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -15,26 +30,23 @@ export default function ExploreMentors() {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          console.error("No token found in localStorage");
           setLoading(false);
           return;
         }
 
-        // FIXED: Using 'Authorization: Bearer' to match your authMiddleware
-        const res = await axios.get("http://localhost:5001/mentor/find-mentors", {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const res = await axios.get(
+          "http://localhost:5001/mentor/find-mentors",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        });
-
-        console.log("Frontend debug - Response Data:", res.data);
+        );
 
         if (res.data.success && res.data.matchedMentors) {
           setMentors(res.data.matchedMentors);
         }
       } catch (err) {
-        // 401 Error handles automatically here
-        console.error("Error fetching mentors:", err.response?.data || err.message);
         if (err.response?.status === 401) {
           alert("Session expired. Please login again.");
           navigate("/");
@@ -43,34 +55,102 @@ export default function ExploreMentors() {
         setLoading(false);
       }
     };
+
     fetchMentors();
   }, [navigate]);
 
-  if (loading) return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-[#F8FAFC]">
-      <Loader2 className="animate-spin h-12 w-12 text-blue-600 mb-4" />
-      <p className="text-slate-500 font-medium italic">Finding your best alumni matches...</p>
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen bg-[#F8FAFC]">
+        <Loader2 className="animate-spin h-12 w-12 text-blue-600 mb-4" />
+        <p className="text-slate-500 font-medium italic">
+          Finding your best alumni matches...
+        </p>
+      </div>
+    );
+
+     if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-500 font-bold">Please login to continue</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Navigation */}
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 text-slate-500 mb-6 hover:text-blue-600 transition font-medium group"
-        >
-          <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          Back to Dashboard
-        </button>
+    <div className="flex min-h-screen bg-[#F8FAFC] font-sans">
 
-        <header className="mb-10">
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Your Smart Matches ✨</h1>
-          <p className="text-slate-500 mt-2 text-lg">Alumni recommendations handpicked for your career path.</p>
-        </header>
+      {/* ================= SIDEBAR ================= */}
+      <div className="w-64 bg-white border-r border-slate-200 p-6 flex flex-col fixed h-full">
+        <div className="flex items-center gap-2 mb-10 px-2">
+          <div className="bg-blue-600 p-1.5 rounded-lg text-white font-bold">
+            ED
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-slate-800">
+            EDANSH
+          </h1>
+        </div>
 
-        {(!mentors || mentors.length === 0) ? (
+        <div className="flex flex-col items-center mb-10 bg-slate-50 p-4 rounded-2xl">
+          <img src="https://i.pravatar.cc/150?u=hardik" className="w-16 h-16 rounded-full border-2 border-white shadow-sm mb-2" alt="profile" />
+          <h3 className="font-bold text-sm text-slate-800">{user.name}</h3>
+          <p className="text-blue-600 text-[10px] font-bold uppercase tracking-wider">{user.role}</p>
+        </div>
+
+        <nav className="space-y-1 flex-1">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl"
+          >
+            <LayoutDashboard size={18} />
+            <span>Dashboard</span>
+          </Link>
+
+          <Link
+            to="/repositories"
+            className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl"
+          >
+            <MessageSquare size={18} />
+            <span>Messages</span>
+          </Link>
+
+          <Link
+            to="/explore-mentors"
+            className="flex items-center gap-3 bg-blue-50 text-blue-600 p-3 rounded-xl font-semibold"
+          >
+            <Users size={18} />
+            <span>Mentors</span>
+          </Link>
+
+          <Link
+            to="/bookings"
+            className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl"
+          >
+            <CalendarMenu size={18} />
+            <span>Schedule</span>
+          </Link>
+        </nav>
+      </div>
+
+      {/* ================= MAIN CONTENT ================= */}
+      <div className="flex-1 ml-64 p-8">
+
+        <header className="flex justify-between items-center mb-8">
+                  <div className="relative w-96">
+                    <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
+                    <input className="w-full bg-white border border-slate-200 rounded-full py-2 pl-10 pr-4 text-sm outline-none focus:border-blue-400 transition" placeholder="Search mentors..." />
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <button className="bg-white p-2 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition"><Bell size={18}/></button>
+                    <div className="h-8 w-[1px] bg-slate-200 mx-2"></div>
+                    <img src="https://i.pravatar.cc/100" className="w-9 h-9 rounded-full border border-slate-200" alt="avatar" />
+                  </div>
+                </header>
+
+
+        <div className="max-w-6xl mx-auto">
+
+          {(!mentors || mentors.length === 0) ? (
           <div className="bg-white p-16 rounded-[3rem] text-center border border-dashed border-slate-200 shadow-sm">
              <div className="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-blue-500">
                <AlertCircle size={40} />
@@ -152,6 +232,7 @@ export default function ExploreMentors() {
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

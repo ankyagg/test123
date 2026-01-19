@@ -1,9 +1,40 @@
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
-import { Calendar as CalendarIcon, Clock, CheckCircle, Info } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  CheckCircle,
+  Info,
+  LayoutDashboard,
+  Users,
+  MessageSquare,
+  Calendar as CalendarMenu
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function ScheduleAppointment() {
+
+    const { user, loading } = useAuth();
+  
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="animate-pulse font-semibold text-slate-500">Loading dashboard...</p>
+        </div>
+      );
+    }
+  
+    if (!user) {
+      return (
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-red-500 font-bold">Please login to continue</p>
+        </div>
+      );
+    }
+
+
   const [bookings, setBookings] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableMentors, setAvailableMentors] = useState([]);
@@ -12,7 +43,9 @@ export default function ScheduleAppointment() {
   // 🔹 Fetch available mentors for a given date
   const fetchAvailableMentors = async (date) => {
     try {
-      const res = await fetch(`http://localhost:5001/mentor/available?date=${date.toISOString()}`);
+      const res = await fetch(
+        `http://localhost:5001/mentor/available?date=${date.toISOString()}`
+      );
       const data = await res.json();
       setAvailableMentors(data);
     } catch (err) {
@@ -20,7 +53,6 @@ export default function ScheduleAppointment() {
     }
   };
 
-  // 🔹 Fetch user bookings
   useEffect(() => {
     fetch(`http://localhost:5001/api/bookings/my/${userId}`)
       .then(res => res.json())
@@ -28,12 +60,10 @@ export default function ScheduleAppointment() {
       .catch(err => console.error(err));
   }, []);
 
-  // 🔹 Fetch available mentors whenever the date changes
   useEffect(() => {
     fetchAvailableMentors(selectedDate);
   }, [selectedDate]);
 
-  // 🔹 Handle booking a mentor
   const handleBook = async (mentorId) => {
     const startTime = selectedDate;
     const endTime = new Date(selectedDate.getTime() + 60 * 60 * 1000);
@@ -49,8 +79,6 @@ export default function ScheduleAppointment() {
       if (res.ok) {
         alert("Slot booked!");
         setBookings(prev => [...prev, data.booking]);
-
-        // 🔹 Optimistic UI: remove booked mentor immediately
         setAvailableMentors(prev => prev.filter(m => m._id !== mentorId));
       } else {
         alert(data.message || "Booking failed");
@@ -62,19 +90,59 @@ export default function ScheduleAppointment() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      {/* --- Top Header Section --- */}
-      <header className="bg-white border-b border-blue-100 py-8 px-8 mb-8">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-extrabold text-blue-900 tracking-tight">
-            Mentor <span className="text-blue-600">Connect</span>
-          </h1>
-          <p className="text-slate-500 mt-2">Manage your sessions and find expert guidance.</p>
-        </div>
-      </header>
+    <div className="flex min-h-screen bg-[#F8FAFC] font-sans">
 
-      <main className="max-w-6xl mx-auto px-8 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* ---------- SIDEBAR (COPIED FROM DASHBOARD) ---------- */}
+      <div className="w-64 bg-white border-r border-slate-200 p-6 flex flex-col fixed h-full">
+        <div className="flex items-center gap-2 mb-10 px-2">
+          <div className="bg-blue-600 p-1.5 rounded-lg text-white font-bold">ED</div>
+          <h1 className="text-xl font-bold tracking-tight text-slate-800">EDANSH</h1>
+        </div>
+
+        <div className="flex flex-col items-center mb-10 bg-slate-50 p-4 rounded-2xl">
+          <img src="https://i.pravatar.cc/150?u=hardik" className="w-16 h-16 rounded-full border-2 border-white shadow-sm mb-2" alt="profile" />
+          <h3 className="font-bold text-sm text-slate-800">{user.name}</h3>
+          <p className="text-blue-600 text-[10px] font-bold uppercase tracking-wider">{user.role}</p>
+        </div>
+
+        <nav className="space-y-1 flex-1">
+          <Link to="/dashboard" className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl">
+            <LayoutDashboard size={18} /> <span>Dashboard</span>
+          </Link>
+
+          <Link to="/repositories" className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl">
+            <MessageSquare size={18} /> <span>Messages</span>
+          </Link>
+
+          <Link to="/explore-mentors" className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl">
+            <Users size={18} /> <span>Mentors</span>
+          </Link>
+
+          {/* ACTIVE PAGE */}
+          <Link to="/bookings" className="flex items-center gap-3 bg-blue-50 text-blue-600 p-3 rounded-xl font-semibold">
+            <CalendarMenu size={18} /> <span>Schedule</span>
+          </Link>
+        </nav>
+      </div>
+
+      {/* ---------- MAIN CONTENT (YOUR ORIGINAL CODE) ---------- */}
+      <div className="flex-1 ml-64">
+        <div className="min-h-screen bg-slate-50 text-slate-900">
+
+          {/* --- Top Header Section --- */}
+          <header className="bg-white border-b border-blue-100 py-8 px-8 mb-8">
+            <div className="max-w-6xl mx-auto">
+              <h1 className="text-4xl font-extrabold text-blue-900 tracking-tight">
+                Mentor <span className="text-blue-600">Connect</span>
+              </h1>
+              <p className="text-slate-500 mt-2">
+                Manage your sessions and find expert guidance.
+              </p>
+            </div>
+          </header>
+
+          <main className="max-w-6xl mx-auto px-8 pb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* --- Left Column: Calendar & Selection --- */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-blue-50">
@@ -170,7 +238,10 @@ export default function ScheduleAppointment() {
             ))}
           </div>
         </section>
-      </main>
+          </main>
+
+        </div>
+      </div>
     </div>
   );
 }
