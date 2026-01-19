@@ -20,5 +20,6 @@ const userSchema = new mongoose.Schema({
     availability: [String]
   }
 });
-
 export default mongoose.model("User", userSchema);
+
+

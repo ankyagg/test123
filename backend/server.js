@@ -5,7 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
 import mentorRoutes from "./routes/mentor.routes.js";
-
+import bookingRoutes from "./routes/bookingroutes.js";
 dotenv.config();
 
 const app = express();
@@ -19,6 +19,11 @@ app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
 app.use("/mentor", mentorRoutes);
 
+app.use(express.json());
+app.use("/api/bookings", bookingRoutes);
+app.get("/", (req, res) => {
+  res.send("Backend running");
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);

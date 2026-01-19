@@ -3,3 +3,13 @@
 ./backend/.env
 
 /node_modules
+# Node modules
+node_modules/
+
+
+config/token.json
+config/google-service.json
+
+# Logs
+logs/
+*.log
