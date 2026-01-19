@@ -7,7 +7,8 @@ import profileRoutes from "./routes/profile.routes.js";
 import mentorRoutes from "./routes/mentor.js";
 import repositoryRoutes from "./routes/repository.routes.js";
 import bookingRoutes from "./routes/bookingroutes.js";
-
+import http from "http";
+import { Server } from "socket.io";
 dotenv.config();
 
 dotenv.config();
@@ -32,8 +33,36 @@ app.use("/api/bookings", bookingRoutes);
 app.get("/", (req, res) => {
   res.send("Backend running");
 });
+// --- Setup HTTP server + Socket.io ---
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: "*" } // adjust if you have frontend URL
+});
 
+// Socket.io real-time logic
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  // Join a room (e.g., mentor-student pair)
+  socket.on("joinRoom", ({ room }) => {
+    socket.join(room);
+    console.log(`User ${socket.id} joined room ${room}`);
+  });
+
+  // Handle sending messages
+  socket.on("sendMessage", ({ room, message, sender }) => {
+    const msgData = { message, sender, createdAt: new Date() };
+    // Broadcast to room
+    io.to(room).emit("receiveMessage", msgData);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
+// Start server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+server.listen.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

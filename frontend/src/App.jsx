@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Booking from "./pages/booking";
 import Repositories from "./pages/Repositories";
 import ExploreMentors from "./pages/ExploreMentors";
+import ChatPage from "./pages/ChatPage"; // <- import the ChatPage we created
 
 function App() {
   return (
@@ -16,11 +17,11 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/bookings" element={<Booking />} />
-        
-        {/* 2. Ye naya route yahan add karo */}
         <Route path="/explore-mentors" element={<ExploreMentors />} />
-        
         <Route path="/repositories" element={<Repositories />} />
+
+        {/* NEW: Chat route */}
+        <Route path="/chat/:mentorId" element={<ChatPage />} />
       </Routes>
     </BrowserRouter>
   );

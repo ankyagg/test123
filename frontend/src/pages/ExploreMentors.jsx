@@ -22,8 +22,8 @@ export default function ExploreMentors() {
 
         // FIXED: Using 'Authorization: Bearer' to match your authMiddleware
         const res = await axios.get("http://localhost:5001/mentor/find-mentors", {
-          headers: { 
-            Authorization: `Bearer ${token}` 
+          headers: {
+            Authorization: `Bearer ${token}`
           }
         });
 
@@ -57,11 +57,11 @@ export default function ExploreMentors() {
     <div className="min-h-screen bg-[#F8FAFC] p-8">
       <div className="max-w-6xl mx-auto">
         {/* Navigation */}
-        <button 
-          onClick={() => navigate("/dashboard")} 
+        <button
+          onClick={() => navigate("/dashboard")}
           className="flex items-center gap-2 text-slate-500 mb-6 hover:text-blue-600 transition font-medium group"
         >
-          <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> 
+          <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           Back to Dashboard
         </button>
 
@@ -79,7 +79,7 @@ export default function ExploreMentors() {
             <p className="text-slate-500 mt-3 max-w-md mx-auto text-base">
               We couldn't find an exact match for your current skills. Try updating your profile or checking back later as more alumni join!
             </p>
-            <button 
+            <button
               onClick={() => navigate("/profile")}
               className="mt-8 px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
             >
@@ -90,7 +90,7 @@ export default function ExploreMentors() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {mentors.map((item) => (
               <div key={item.mentor._id} className="bg-white border border-slate-100 p-8 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
-                
+
                 {/* Visual Accent */}
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 to-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
@@ -112,11 +112,11 @@ export default function ExploreMentors() {
 
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-xl">
-                    <Star size={18} className="text-amber-400 fill-amber-400" /> 
+                    <Star size={18} className="text-amber-400 fill-amber-400" />
                     <span className="font-semibold">{item.mentor.profile?.industry || "Professional"}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-xl">
-                    <GraduationCap size={18} className="text-blue-500" /> 
+                    <GraduationCap size={18} className="text-blue-500" />
                     <span className="font-semibold">Class of {item.mentor.profile?.graduationYear || "Alumni"}</span>
                   </div>
                 </div>
@@ -132,12 +132,22 @@ export default function ExploreMentors() {
                   </div>
                 </div>
 
-                <button 
-                  onClick={() => alert(`Your mentorship request has been sent to ${item.mentor.name}!`)} 
-                  className="w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-bold hover:bg-blue-600 transition-all shadow-xl hover:shadow-blue-200 active:scale-95"
-                >
-                  Request 1-on-1 Mentorship
-                </button>
+                <div className="flex gap-4">
+  <button
+  onClick={() => navigate("/bookings", { state: { mentorId: item.mentor._id, mentorName: item.mentor.name } })}
+  className="flex-1 bg-slate-900 text-white py-5 rounded-[1.5rem] font-bold hover:bg-blue-600 transition-all shadow-xl hover:shadow-blue-200 active:scale-95"
+>
+  Request 1-on-1 Mentorship
+</button>
+
+  <button
+  onClick={() => navigate(`/chat/${item.mentor._id}`, { state: { mentorName: item.mentor.name } })}
+  className="flex-1 bg-blue-50 text-blue-700 py-5 rounded-[1.5rem] font-bold hover:bg-blue-600 hover:text-white transition-all shadow-md hover:shadow-blue-200 active:scale-95"
+>
+  Chat
+</button>
+</div>
+
               </div>
             ))}
           </div>
