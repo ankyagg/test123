@@ -12,7 +12,7 @@ export default function ScheduleAppointment() {
   // 🔹 Fetch available mentors for a given date
   const fetchAvailableMentors = async (date) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/mentors/available?date=${date.toISOString()}`);
+      const res = await fetch(`http://localhost:5001/mentor/available?date=${date.toISOString()}`);
       const data = await res.json();
       setAvailableMentors(data);
     } catch (err) {

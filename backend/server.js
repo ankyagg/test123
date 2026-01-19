@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
 import mentorRoutes from "./routes/mentor.js";
 import repositoryRoutes from "./routes/repository.routes.js";
+import bookingRoutes from "./routes/bookingroutes.js";
 
 dotenv.config();
 
