@@ -98,7 +98,7 @@ export default function Repositories() {
           <Link to="/repositories" className="flex items-center gap-3 p-3 rounded-xl bg-blue-50 text-blue-600 font-semibold">
             <FileText size={18} /> Repository
           </Link>
-          <Link to="/dashboard"><div className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition">
+          <Link to="/explore-mentors"><div className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition">
                       <Users size={18} /> <span>Mentors</span>
             </div></Link>
           <Link to="/bookings" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 text-slate-500">
