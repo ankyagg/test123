@@ -17,10 +17,11 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
-app.use("/mentor", mentorRoutes);
+// app.use("/mentor", mentorRoutes);
 
 app.use(express.json());
-app.use("/api/bookings", bookingRoutes);
+// app.use("/api/bookings", bookingRoutes);
+
 app.get("/", (req, res) => {
   res.send("Backend running");
 });

@@ -26,7 +26,7 @@ const Login = () => {
       if (res.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userRole", data.role); // Store role for redirection
-        navigate(data.role === "admin" ? "/admin-dashboard" : "/profile");
+        navigate(data.role === "admin" ? "/admin-dashboard" : "/dashboard");
       } else {
         setError(data.message || "Login failed");
       }
