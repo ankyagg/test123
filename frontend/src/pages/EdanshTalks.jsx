@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mic, History, BookOpen, Star, PlayCircle, Clock, ChevronLeft, X, Youtube, Share2, Calendar, Zap } from "lucide-react";
+import { Mic, History, BookOpen, Star, PlayCircle,Route, Clock, ChevronLeft, X, Youtube, Share2, Calendar, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function EdanshTalks() {

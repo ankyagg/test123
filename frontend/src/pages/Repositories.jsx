@@ -8,6 +8,7 @@ import {
   FileText,
   Search,
   Mic,
+  Route,
   Plus
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -110,6 +111,12 @@ export default function Repositories() {
                       </Link>
           <Link to="/bookings" className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 text-slate-500">
             <Calendar size={18} /> Schedule
+          </Link>
+
+          <Link to="/path" className="flex items-center gap-3 bg-blue-50 text-blue-600 p-3 rounded-xl font-semibold">
+            <div className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition">
+                      <Route size={18} /> <span>Path Visualizer</span>
+            </div>
           </Link>
         </nav>
       </div>

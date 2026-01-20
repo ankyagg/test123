@@ -14,6 +14,7 @@ import {
   Search,
   Mic,
   Bell,
+  Route,
   MessageSquare,
   Calendar as CalendarMenu
 } from "lucide-react";
@@ -169,6 +170,10 @@ export default function ExploreMentors() {
           >
             <CalendarMenu size={18} />
             <span>Schedule</span>
+          </Link>
+
+          <Link to="/path" className="flex items-center gap-3 bg-blue-50 text-blue-600 p-3 rounded-xl font-semibold">
+            <Route size={18} /> <span>Path Visualizer</span>
           </Link>
         </nav>
       </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 // Maine Mic icon add kiya hai Talks ke liye
-import { LayoutDashboard, Users, Calendar, MessageSquare, Bell, ChevronRight, PlayCircle, FileText, Search, Mic, Zap } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, MessageSquare, Bell, ChevronRight, PlayCircle,Route, FileText, Search, Mic, Zap } from 'lucide-react';
 import { useAuth } from "../context/AuthContext";
 import { Link, useLocation } from 'react-router-dom';
 
@@ -65,6 +65,10 @@ export default function Dashboard() {
           </Link>
           <Link to="/leaderboard" className="flex items-center gap-3 text-slate-500 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition">
             <MessageSquare size={18} /> <span>Leaderboard</span>
+          </Link>
+
+          <Link to="/path" className="flex items-center gap-3 bg-blue-50 text-blue-600 p-3 rounded-xl font-semibold">
+                      <Route size={18} /> <span>Path Visualizer</span>
           </Link>
   
         </nav>
