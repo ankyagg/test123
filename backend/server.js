@@ -23,10 +23,7 @@ const app = express();
 connectDB();
 
 // Middlewares
-app.use(cors({
-  origin: "http://localhost:5173", // React dev server
-  credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 
