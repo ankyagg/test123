@@ -41,6 +41,7 @@ export default function ScheduleAppointment() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableMentors, setAvailableMentors] = useState([]);
   const userId = user._id;
+  const API_BASE = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://unified-alumni-student-mentorship-portal.onrender.com');
 
   // 🔹 Fetch available mentors for a given date
   const fetchAvailableMentors = async (date) => {
@@ -48,7 +49,7 @@ export default function ScheduleAppointment() {
       const token = localStorage.getItem("token");
 
 const res = await fetch(
-  `https://unified-alumni-student-mentorship-portal.onrender.com/api/mentors/available?date=${date.toISOString()}`,
+  `${API_BASE}/api/mentors/available?date=${date.toISOString()}`,
   { headers: { Authorization: `Bearer ${token}` } }
 );
 
@@ -65,7 +66,7 @@ const res = await fetch(
   useEffect(() => {
   const token = localStorage.getItem("token");
 
-  fetch(`https://unified-alumni-student-mentorship-portal.onrender.com/api/bookings/my/${userId}`, {
+  fetch(`${API_BASE}/api/bookings/my/${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -88,7 +89,7 @@ const res = await fetch(
       const token = localStorage.getItem("token");
 console.log("TOKEN:", localStorage.getItem("token"));
 
-const res = await fetch("https://unified-alumni-student-mentorship-portal.onrender.com/api/bookings/book", {
+const res = await fetch(`${API_BASE}/api/bookings/book`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
