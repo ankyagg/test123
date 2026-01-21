@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
@@ -15,6 +17,20 @@ import careerPathRoutes from "./routes/careerPathRoutes.js";
 
 
 dotenv.config();
+// If the service account JSON is provided as an env var, write it to a secure file
+if (process.env.GOOGLE_SERVICE_JSON) {
+  try {
+    const keyPath = path.resolve(process.cwd(), "backend", "config", "google-service.json");
+    const dir = path.dirname(keyPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(keyPath, process.env.GOOGLE_SERVICE_JSON, { mode: 0o600 });
+    // Ensure Google client libraries can pick it up if code references GOOGLE_APPLICATION_CREDENTIALS
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = keyPath;
+    console.log("Wrote GOOGLE_SERVICE_JSON to", keyPath);
+  } catch (err) {
+    console.error("Failed to write GOOGLE_SERVICE_JSON to disk:", err?.message || err);
+  }
+}
 
 dotenv.config();
 const app = express();
